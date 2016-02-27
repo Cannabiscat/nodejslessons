@@ -9,11 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ansi": "^0.3.1",
-    "beepbeep": "^1.2.0",
     "colors": "^1.1.2",
-    "play": "^0.5.0",
-    "play-audio": "^0.1.0",
     "play-sound": "0.0.7"
   }
 }
