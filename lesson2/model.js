@@ -38,6 +38,7 @@ var Deck = function() {
 var Player = function () {
 	let sum = 0;
 	let card=[];
+	this.status = true;
 	let getCardNom = function(card) {
 		var nom;
 		for(var i in card) {
