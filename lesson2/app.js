@@ -33,7 +33,7 @@ rl.question('Are you ready to play a game?(y/n)', (answ) => {
 				} else if (line === 'y') {
 					player.addCard(next());
 					view.show(player.getCards());
-					view.show('You have ' + player.getSum());
+					view.show('You have ' + player.getCards() + ' and ' + player.getSum() + ' points');
 				} else {
 					view.show('Wrong answer, enter "y" or "n"!')
 				}
