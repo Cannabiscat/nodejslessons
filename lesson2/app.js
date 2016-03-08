@@ -63,7 +63,7 @@ rl.question('Are you ready to play a game?(y/n)', (answ) => {
 					}
 				} else {
 					view.lose();
-					rl.close();
+					//rl.close();
 				}
 				process.exit(0);
 			});
