@@ -32,7 +32,5 @@ const Tasks = {
 		doQuery(sql, params, callback);
 	}
 };
-Tasks.list((result)=> {
-	console.log(result[1]);
-})
+
 module.exports = Tasks;
