@@ -1,52 +1,37 @@
 'use strict';
-
-const connect = require('./config');
-
-let doQuery = function (sql, params) {
-	connect.getConnection(function(err, connection) {
-		sql = connection.format(sql, params);
-		connection.query(sql, function (err, rows) {
-			if (err) console.log(err);
-			return rows;
-		});
-		connection.release();
-	});
-}
+const qtemplate = require('./qtemplate');
 
 const Tasks = {
 	list: function(callback) {
-		let sql = 'SELECT * FROM `tasks`';
-		console.log(doQuery(sql));
+		let sql = 'SELECT * FROM `tasks` ORDER BY ?? ASC';
+		let params = [`task_order`];
+		qtemplate(sql, params, callback);
 	},
 	add: function(task, callback) {
-		connect.getConnection(function(err, connection) {
-			let sql = 'INSERT INTO `tasks` (`id`, `task`) SET';
-			connection.query(sql, task, function (err, result) {
-				console.log(result);
-			});
-			connection.release();
-		});
+		let sql = 'INSERT INTO `tasks` SET ?';
+		let params = [{
+			task_text: task.text,
+			task_order: task.order
+		}];
+		qtemplate(sql, params, callback);
 	},
 	change: function(id, text, callback) {
 		let sql = 'UPDATE `tasks` SET ? WHERE ??=?';
 		let params = [{task_text: text}, `id`, id];
-		doQuery(sql, params);
+		qtemplate(sql, params, callback);
 	},
 	complete: function(id, callback) {
-		/ / // TODO
+		let sql = 'UPDATE `tasks` SET ? WHERE ??=?';
+		let params = [{task_status: 1}, `id`, id];
+		qtemplate(sql, params, callback);
 	},
 	delete: function(id, callback) {
-		connect.getConnection(function (err, connection) {
-			connection.query('DELETE FROM `tasks` WHERE `id`=' + id, function(err, rows) {
-				if (err) console.log('Error: ' + err);
-				console.log('Deleting task ' + id + ' is comleted');
-			});
-			connection.release();
-		})
+		let sql = 'DELETE FROM `tasks` WHERE ??=?';
+		let params = [`id`, id];
+		qtemplate(sql, params, callback);
 	}
 };
-Tasks.change(1, 'test three');
-//Tasks.list((res) => {
-//	console.log(res);
-//});
+Tasks.list((result)=> {
+	console.log(result[1]);
+})
 module.exports = Tasks;
