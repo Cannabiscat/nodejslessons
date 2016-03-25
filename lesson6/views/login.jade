@@ -8,7 +8,9 @@ block content
         h2 Log in
         div= error
         div
-            form(action="/login", method="POST")
+            form(action="./login", method="POST")
+                p
+                    input(name="_csrf", type="hidden", value="#{csrf}")
                 p
                     input.form-control(name="username", type="text", placeholder="username")
                 p
