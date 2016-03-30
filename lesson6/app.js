@@ -34,24 +34,41 @@ app.use(function *(next) {
 	yield next;
 	this.db.release();
 });
+router.get('/favicon.ico', function* (next) {
+	return;
+	yield next;
+});
 router.get('/', function* (next) {
 		if (this.session.userID === undefined) {
 			this.render('index', {message: 'User not authenticated!'});
 		} else {
-			this.render('index', {message: 'Welcome, ' + this.session.username} );
+			let result = yield this.db.query(req.list, [`tasks`, `task_owner`, this.session.userID]);
+			let list = [];
+			for (let item of result[0]) {
+				list.push({
+					title: item.task_title,
+					text: item.task_text,
+					id: item.id
+				});
+			}
+			this.render('tasks', {message: 'Welcome, ' + this.session.username, task: list, csrf: this.csrf} );
 		}
 		yield next;
 	})
 	.get('/login', function* (next) {
 		if (!this.session.userID) {
-			this.render('login', {csrf: this.csrf});
+			this.render('login', {csrf: this.csrf, message: 'Please, log in!', appTitle: 'Title'});
 		} else {
-			this.redirect('/logout');
+			this.redirect('/');
 		}
 		yield next;
 	})
 	.get('/create', function* (next) {
-		this.render('create');
+		if (!this.session.userID) {
+			this.redirect('/login');
+		} else {
+			this.render('create', {csrf: this.csrf});
+		}
 		yield next;
 	})
 	.post('/login', function* (next) {
@@ -63,15 +80,49 @@ router.get('/', function* (next) {
 		}
 		let user = yield this.db.query(req.get, [`users`, `user_name`, body.username]);
 		let res = user[0][0];
-		if (!res.id) throw(404, 'User not found');
-		this.session.userID = res.id;
-		this.session.username= res.user_name;
+		if (!res.id) {
+			throw(404, 'User not found');
+		} else {
+			if (body.password === res.user_password) {
+				this.session.userID = res.id;
+				this.session.username = res.user_name;
+				this.redirect('/');
+				yield next;
+			} else throw (404, 'Wrong Password!');
+		}
+	})
+	.post('/create' , function* (next) {
+		let body = yield parse(this);
+		try {
+			this.assertCsrf(body);
+		} catch (err) {
+			this.throw(403, err)
+		}
+		let task = {
+			task_owner: this.session.userID,
+			task_title: body.title,
+			task_text: body.text,
+			task_status: 0,
+			task_order: body.order
+		};
+		yield this.db.query(req.add, [`tasks`, task]);
 		this.redirect('/');
 		yield next;
 	})
 	.get('/logout', function* (next) {
 		this.session = null;
 		this.redirect('/login');
+		yield next;
+	})
+	.post('/delete', function* (next) {
+		let body = yield parse(this);
+		try {
+			this.assertCsrf(body);
+		} catch (err) {
+			this.throw(403, err)
+		}
+		yield this.db.query(req.delete, [`tasks`, `id`, body.id]);
+		this.redirect('/');
 		yield next;
 	})
 

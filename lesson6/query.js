@@ -1,7 +1,7 @@
 'use strict';
 
 const Query = {
-	list: 'SELECT * FROM ??',
+	list: 'SELECT * FROM ?? WHERE ??=?',
 	add: 'INSERT INTO ?? SET ?',
 	get: 'SELECT * FROM ?? WHERE ??=?',
 	change: 'UPDATE ?? SET ? WHERE ??=?',

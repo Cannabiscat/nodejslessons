@@ -1,0 +1,26 @@
+extends index
+
+block tasks
+    | Your TODO list is:
+    if task.length
+    +accordion("tasks")
+        each list in task
+            +accordion-item-primary(list.title)
+                div
+                    h1= list.text
+                div
+                    a.btn.btn-warning
+                        | Edit
+                    a.btn.btn-success
+                        | Done!
+                    a.btn.btn-danger(href="#",data-toggle="modal",data-target="##{list.id}")
+                        span.glyphicon.glyphicon-remove
+                            | Delete
+                    +modal("Delete",list.id)
+                        include delete
+        else
+            | There's no tasks!
+
+    div.well(data-toggle="modal",data-target="#create", style="text-align: center") Create new task
+    +modal("Task","create")
+        include create

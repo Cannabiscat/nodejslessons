@@ -1,16 +1,15 @@
-extends layout
+h2 Create a Task!
+form(action="./create", method="POST", role="form")
+    div.form-group
+        input(name="_csrf", type="hidden", value="#{csrf}")
+        label(for="order") Task order
+        input#order.form-control(name="order", type="number")
+        label(for="title") Task Title
+        input#title.form-control(name="title", type="text", placeholder="Type a name of task")
 
-block content
-    h2 Create a Task!
-    div= error
-    div.col-md-8
-        form(action="/post", method="POST", role="form")
-            div.form-group
-                label(for="title") Task Title
-                input#title.form-control(name="title", type="text", placeholder="Type a name of task")
-
-            div.form-group
-                label(for="text") Task text
-                textarea#text.form-control(rows="5", name="text", placeholder="Put here task description")
-            p
-                button.btn.btn-primary(type="submit") Save
+    div.form-group
+        label(for="text") Task text
+        textarea#text.form-control(rows="5", name="text", placeholder="Put here task description")
+    p.create
+        button.btn.btn-primary(type="submit") Save
+        button.btn.btn-warning(type="button",data-dismiss="modal") Cancel

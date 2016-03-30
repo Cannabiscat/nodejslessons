@@ -1,0 +1,7 @@
+h2 Are you sure?
+form(action="./delete", method="POST", role="form")
+    input(name="_csrf", type="hidden", value="#{csrf}")
+    input(name="id", type="hidden", value="#{list.id}")
+    p.delete
+        button.btn.btn-danger(type="submit") Yes
+        button.btn.btn-primary(type="button",data-dismiss="modal") Cancel

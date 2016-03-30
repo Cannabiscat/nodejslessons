@@ -1,25 +1,23 @@
-doctype html
-html
-    head
+extends _bootstrap
+append styles
+    // Custom styles for this template
+    link(href='/css/sticky-footer-navbar.css', rel='stylesheet')
 
-        script(type="text/javascript", src='js/jquery-2.2.1.min.js')
-        script(type="text/javascript", src="js/bootstrap.min.js")
-        link(href='css/bootstrap.min.css', rel="stylesheet")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    body
-        #wrap
-            .container
-                h1.page-header= appTitle
-                h1
-                    p.lead It's a TODO List time!
-                block page
-                block header
-                .content
-                    block content
-        block footer
-            footer
-                .container
-                    p
-                        |Copyrigth &copy; 2016 | All issues submit to &nbsp;
-                        a(href=" https://github.com/Cannabiscat") GitHub
-                        |.
+block body
+    #wrap
+        .container
+            +navbar("TODO List", "dropdown_menu", "inverse")
+                +nav_item('/') Index
+                +nav_item('/login') Login
+                +nav_item('/logout') Logout
+            h1
+            block page
+            block header
+            .content
+                block content
+    footer.footer
+        .container
+            p.text-muted
+                    |Copyrigth &copy; 2016 | All issues submit to &nbsp;
+                    a(href=" https://github.com/Cannabiscat") GitHub
+                    |.
